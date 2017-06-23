@@ -1,40 +1,38 @@
 import React from 'react';
 
 class Solutions extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {answerChosen: '0'};
-    }
+  constructor(props) {
+      super(props);
+      this.state = {
+        answerChosen: null,
+        buttons: [],
+      };
+  }
 
-    render() {
-        const answer = this.state.answerChosen;
+  componentDidMount() {
+    fetch('/choices').then((res) => res.json())
+    .then((buttons) => {this.setState({ buttons })});
+  }
 
-        if(answer === '0') {
-            return (
-                <div>
-                    <p> </p>
-                    <button onClick={() => this.setState({answerChosen: 'A'})}>A</button>
-                    <button onClick={() => this.setState({answerChosen: 'B'})}>B</button>
-                    <button onClick={() => this.setState({answerChosen: 'C'})}>C</button>
-                    <button onClick={() => this.setState({answerChosen: 'D'})}>D</button>
-                    <button onClick={() => this.setState({answerChosen: 'E'})}>E</button>
-                </div>
-            );
-        } else {
-            return (
-                <div>
-                    <p>You have selected {answer}</p>
-                    <button onClick={() => this.setState({answerChosen: 'A'})}>A</button>
-                    <button onClick={() => this.setState({answerChosen: 'B'})}>B</button>
-                    <button onClick={() => this.setState({answerChosen: 'C'})}>C</button>
-                    <button onClick={() => this.setState({answerChosen: 'D'})}>D</button>
-                    <button onClick={() => this.setState({answerChosen: 'E'})}>E</button>
-                </div>
-            );
-        }
-    }
+  render() {
+    const answer = this.state.answerChosen;
 
+    let header = (answer ? <span>You have selected {answer}</span> : null);
 
+    return (
+      <div>
+        {header}
+        <br />
+        {this.state.buttons.map((l, i) => {
+          return (
+            <button onClick={() => this.setState({answerChosen: l.id})}>
+              {l.id}
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
 }
 
 export default Solutions;
